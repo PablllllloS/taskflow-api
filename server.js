@@ -19,7 +19,7 @@ let tarefas = [
 ]
 let usuarios = [{id: 1, nome: "admin", email: 'emaildasilvasantos@gmail.com', senha: 'senhaFraca1'}]
 let proximoId = 4;
-let proximoUsuario = 1;
+let proximoUsuario = 2;
 
 app.get('/', (req, res) => {res.json({mensagem: 'Taskflow API funcionando'})});
 app.get('/tarefas', (req, res) => res.json(tarefas));
@@ -35,7 +35,6 @@ app.get('/tarefas/:id', (req, res) => {
 });
 
 app.post('/tarefas', (req, res)=>{
-
     //req.body vai ter os dados enviados pela requisição, 
     //e então vai cair em cada uma dessas constantes, por conta de ter o mesmo nome
 
@@ -122,7 +121,13 @@ app.put('/usuarios/:id',(req, res)=>{
     res.json(usuarioAtualizado);
 });
 app.delete('/usuarios/:id', (req, res)=>{
-
+    const id = Number(req.params.id);
+    const usuario = usuarios.find(u => u.id === id);
+    if (!id) {
+        return res.status(404).json({erro:'Usuário não encontrado'});        
+    };
+    usuarios = usuarios.filter(u => u.id !== id)
+    res.status(200).json({mensagem: `Usuario retirado: ${id}`});
 })
 //PRODUÇÃO
 

@@ -4,9 +4,13 @@ const app = express();
 const PORTA = 3000;
 const tarefasRoutes = require('./src/tarefas/tarefas.routes');
 const usuarioRoutes = require('./src/usuarios/usuarios.routes');
+const logger = require('./src/middleware/logger');
+const validarContentType = require('./src/middleware/validarContentType');
 
 
 app.use(express.json()) // PARTE IMPORTANTE PARA QUE O GET - PUT - DELET - POST POSSAM FUNCIONAR
+app.use(validarContentType);
+app.use(logger);
 
 // PRODUÇÃO
 

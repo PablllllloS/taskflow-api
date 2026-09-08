@@ -26,7 +26,7 @@ module.exports = {
     editar: ({id, texto, prioridade, coluna}) =>{
         const idx = tarefas.findIndex(t => t.id === id);
         if(idx === -1){
-            return null; status(404).json({erro: 'Tarefa não encontrada'})
+            return null;
         };
         const tarefaAtualizada = {id, texto, prioridade, coluna};
         return tarefas[idx] = tarefaAtualizada;

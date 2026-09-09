@@ -11,11 +11,9 @@
   "author": "Pablo",
   "license": "ISC",
   "keywords": [],
-
   "devDependencies": {
     "nodemon": "^3.1.14"
   },
-  
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

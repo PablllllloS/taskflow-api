@@ -9,9 +9,9 @@ const tarefasController = {
     buscarPorId (req, res){
         const id = parseInt(req.params.id);
         const tarefa = tarefaModels.buscar(id);
-        if (!tarefa){
-            return res.status(404).json({erro:'Tarefa não encontrada'});
-        };
+        // if (!tarefa){
+        //     return res.status(404).json({erro:'Tarefa não encontrada'});
+        // };
         res.status(200).json(tarefa)
     },
     criar (req, res){

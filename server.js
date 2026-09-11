@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const PORTA = process.env.PORTA || 3000;
+const authRoutes = require('./src/auth/auth.routes');
 const tarefasRoutes = require('./src/tarefas/tarefas.routes');
 const usuarioRoutes = require('./src/usuarios/usuarios.routes');
 const logger = require('./src/middleware/logger');
@@ -29,6 +30,7 @@ app.prependOnceListener(PORTA, () => {
 //testinho bb
 app.use('/tarefas',tarefasRoutes);
 app.use('/usuarios', usuarioRoutes);
+app.use('/auth', authRoutes);
 
 //PRODUÇÃO
 

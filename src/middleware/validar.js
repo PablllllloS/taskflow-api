@@ -17,7 +17,7 @@ function validar(schema){
             if (regras.enum && !regras.enum.includes(valor)){
                 erros.push(`o campo ${campo} deve ser um de: ${regras.enum.join(', ')}`);
             };
-    
+
             if(regras.formato === 'email'){
                 const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if(!re.test(valor)){

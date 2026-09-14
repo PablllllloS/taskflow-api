@@ -1,5 +1,5 @@
 const tarefaModels = require('./tarefas.models')
-
+const usuario = require('../middleware/autenticar')
 const tarefasController = {
     listar (req, res){
         const {coluna} = req.query;
@@ -17,6 +17,10 @@ const tarefasController = {
     criar (req, res){
         const {texto, prioridade, coluna } = req.body;
         const novaTarefa = tarefaModels.adicionar({texto, prioridade, coluna});
+        console.log(req.usuario);
+        const dados = {
+            ...req.body, usuarioId: req.usuario.id,
+        }
         res.status(201).json(novaTarefa);
     },
 

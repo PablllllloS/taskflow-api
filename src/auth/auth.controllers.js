@@ -9,6 +9,7 @@ const authController = {
             return res.status(400).json({erro: 'Email e senha são obrigatórios'});
         }
         const usuario = usuarioModel.buscarPorEmail(email);
+        
         if(!usuario){
             return res.status(401).json({erro: 'Credenciais inválidas'});
         };

@@ -12,7 +12,6 @@ function autenticar (req, res, next){
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         req.usuario = payload;
-        
         next();
     }catch (erro){
         if(erro.name === 'TokenExpiredError'){

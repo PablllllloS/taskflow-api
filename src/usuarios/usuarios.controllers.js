@@ -1,8 +1,8 @@
-let listaUsuarios = [{id: 1,idade: 21, nome: "Pablo", cargo: "Estagiário"}]
+const listaUsuarios = require('./usuarios.models');
 let proximoUsuario = 2
 
 const usuariosController = {
-    listar(req, res){res.status(200).json(listaUsuarios)},
+    listar(req, res){res.status(200).json(listaUsuarios.usuarios)},
     criar(req, res){
         const {nome, cargo} = req.body;
         const novoUsuario = {

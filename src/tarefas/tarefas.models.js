@@ -1,7 +1,4 @@
-let tarefas = [
-    { id: 1, texto: "Estudar NodeJs", prioridade: "alta", coluna: "andamento", usuarioId: 1 },
-    { id: 2, texto: "Aprender React", prioridade: "media", coluna: "afazer", usuarioId: 1 }
-];
+let tarefas = [];
 let proximoId = 3;
 
 module.exports = {

@@ -17,7 +17,6 @@ app.use(express.json());
 app.use(validarContentType);
 app.use(logger);
 
-// Rotas
 app.use('/auth', authRoutes);
 app.use('/tarefas', autenticar, tarefasRoutes);
 app.use('/usuarios', autenticar, usuarioRoutes);

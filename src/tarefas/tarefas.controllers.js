@@ -20,13 +20,13 @@ const tarefasController = {
         const { texto, prioridade, coluna } = req.body;
         const usuarioId = req.usuario ? req.usuario.id : null;
 
-        // 🛡️ REGRA DE NEGÓCIO: Máximo de 2 tarefas em 'andamento'
         if (coluna === 'andamento' && usuarioId) {
             const todasTarefas = tarefaModels.listar();
             const tarefasEmAndamento = todasTarefas.filter(t => t.usuarioId === usuarioId && t.coluna === 'andamento');
             
             if (tarefasEmAndamento.length >= 2) {
-                return res.status(403).json({ 
+                return res.status(401).json({ 
+                    //ver sobre o 403
                     erro: 'Limite atingido. Só é permitido ter no máximo 2 tarefas em andamento.' 
                 });
             }
@@ -47,13 +47,13 @@ const tarefasController = {
             return res.status(404).json({ erro: 'Tarefa não encontrada' });
         }
 
-        // 🛡️ REGRA DE NEGÓCIO: Previne que o utilizador burle a regra através da edição
         if (coluna === 'andamento' && tarefaAtual.coluna !== 'andamento' && usuarioId) {
             const todasTarefas = tarefaModels.listar();
             const tarefasEmAndamento = todasTarefas.filter(t => t.usuarioId === usuarioId && t.coluna === 'andamento');
             
             if (tarefasEmAndamento.length >= 2) {
-                return res.status(403).json({ 
+                return res.status(401).json({ 
+                    //ver sobre o 403
                     erro: 'Limite atingido. Não pode mover mais tarefas para andamento (máximo de 2).' 
                 });
             }

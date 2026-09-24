@@ -25,3 +25,4 @@ app.use('/usuarios', autenticar, usuarioRoutes);
 app.listen(PORTA, () => {
     console.log(`Servidor rodando na porta ${PORTA}`);
 });
+module.exports = app;

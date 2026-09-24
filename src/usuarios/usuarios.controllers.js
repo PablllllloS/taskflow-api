@@ -1,45 +1,38 @@
-const listaUsuarios = require('./usuarios.models');
-let proximoUsuario = 2
+const usuarioModel = require('./usuarios.models');
 
 const usuariosController = {
-    listar(req, res){res.status(200).json(listaUsuarios.usuarios)},
-    criar(req, res){
-        const {nome, cargo} = req.body;
-        const novoUsuario = {
-            id: proximoUsuario++,
-            nome: nome,
-            cargo: cargo,
-        };
-        listaUsuarios.push(novoUsuario)
-        res.status(200).json({mensagem: "Novo usuario, criado com sucesso"});
+    listar(req, res) {
+        res.status(200).json(usuarioModel.listar());
     },
-    usuarioPorId(req, res){
+    criar(req, res) {
+        const { nome, email, senha, cargo } = req.body;
+        const novoUsuario = usuarioModel.criar({ nome, email, senha, cargo });
+        res.status(201).json({ mensagem: "Usuário criado com sucesso", usuario: novoUsuario });
+    },
+    usuarioPorId(req, res) {
         const id = Number(req.params.id);
-        const usuario = listaUsuarios.find(l => l.id === id)
-        if(!usuario){
-            return res.status(404).json({erro:"Usuario não encontrado"})
+        const usuario = usuarioModel.buscarPorId(id);
+        if (!usuario) {
+            return res.status(404).json({ erro: "Usuário não encontrado" });
         }
-        res.status(200).json({usuario});
+        res.status(200).json({ usuario });
     },
-    editar(req, res){
-        const id = Number(req.params.id)
-        const {nome, cargo, idade} = req.body
-        const indx = listaUsuarios.findIndex(l => l.id === id);
-        if(indx === -1){
-            return res.status(404).json({erro:"Usuario não encontrado"})
-        }
-        const usuarioAtualizado = {nome, cargo, idade};
-        listaUsuarios[indx] = usuarioAtualizado;
-        res.status(200).json({mensagem: "Usuario editado com sucesso"})
-    },
-    deletar(req, res){
+    editar(req, res) {
         const id = Number(req.params.id);
-        const usuario = listaUsuarios.find(l => l.id !== id);
-        if(!usuario){
-            return res.status(404).json({erro: "Usuario não encontrado"})
-        };
-        listaUsuarios = listaUsuarios.filter(l => l.id !== id);
-        res.json({mensagem: "Usuario deletado"});
+        const usuarioAtualizado = usuarioModel.editar(id, req.body);
+        if (!usuarioAtualizado) {
+            return res.status(404).json({ erro: "Usuário não encontrado" });
+        }
+        res.status(200).json({ mensagem: "Usuário editado com sucesso", usuario: usuarioAtualizado });
+    },
+    deletar(req, res) {
+        const id = Number(req.params.id);
+        const deletado = usuarioModel.deletar(id);
+        if (!deletado) {
+            return res.status(404).json({ erro: "Usuário não encontrado" });
+        }
+        res.json({ mensagem: "Usuário deletado com sucesso" });
     }
-}
-module.exports = usuariosController
+};
+
+module.exports = usuariosController;

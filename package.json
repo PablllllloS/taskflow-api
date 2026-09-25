@@ -2,7 +2,7 @@
   "name": "taskflow-api",
   "version": "1.0.0",
   "description": "teste",
-  "main": "global.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",

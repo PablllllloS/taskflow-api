@@ -17,9 +17,12 @@ app.use(express.json());
 app.use(validarContentType);
 app.use(logger);
 
+app.get('/', (req, res) => res.json({api: "TaskFlow"}))
 app.use('/auth', authRoutes);
 app.use('/tarefas', autenticar, tarefasRoutes);
 app.use('/usuarios', autenticar, usuarioRoutes);
+
+app.use((req, res) => res.status(404).json({error: "rota não encontrada..."}))
 
 app.listen(PORTA, () => {
     console.log(`Servidor rodando na porta ${PORTA}`);

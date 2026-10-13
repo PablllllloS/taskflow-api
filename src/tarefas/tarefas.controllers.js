@@ -1,27 +1,27 @@
 const tarefaModels = require('./tarefas.models');
 
 const tarefasController = {
-    listar(req, res) {
+    async listar(req, res) {
         const { coluna } = req.query;
-        const resultado = coluna ? tarefaModels.listarPorColuna(coluna) : tarefaModels.listar();
+        const resultado = coluna ? await tarefaModels.listarPorColuna(coluna) : await tarefaModels.listar();
         res.status(200).json(resultado);
     },
 
-    buscarPorId(req, res) {
+    async buscarPorId(req, res) {
         const id = parseInt(req.params.id);
-        const tarefa = tarefaModels.buscar(id);
+        const tarefa = await tarefaModels.buscar(id);
         if (!tarefa) {
             return res.status(404).json({ erro: 'Tarefa não encontrada' });
         }
         res.status(200).json(tarefa);
     },
 
-    criar(req, res) {
+    async criar(req, res) {
         const { texto, prioridade, coluna } = req.body;
         const usuarioId = req.usuario ? req.usuario.id : null;
 
         if (coluna === 'andamento' && usuarioId) {
-            const todasTarefas = tarefaModels.listar();
+            const todasTarefas = await tarefaModels.listar();
             const tarefasEmAndamento = todasTarefas.filter(t => t.usuarioId === usuarioId && t.coluna === 'andamento');
             
             if (tarefasEmAndamento.length >= 2) {

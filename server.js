@@ -12,6 +12,8 @@ const autenticar = require('./src/middleware/autenticar');
 const corsMiddleware = require('./src/middleware/cors');
 const validarContentType = require('./src/middleware/validarContentType');
 
+const pool = require('./src/database/db');
+
 app.use(corsMiddleware);
 app.use(express.json());
 app.use(validarContentType);
@@ -23,6 +25,14 @@ app.use('/tarefas', autenticar, tarefasRoutes);
 app.use('/usuarios', autenticar, usuarioRoutes);
 
 app.use((req, res) => res.status(404).json({error: "rota não encontrada..."}))
+
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+        console.error('Erro ao conectar ao banco de dados:', err); 
+    } else {
+        console.log('banco conectado:', res.rows[0].now);
+    }
+});
 
 app.listen(PORTA, () => {
     console.log(`Servidor rodando na porta ${PORTA}`);

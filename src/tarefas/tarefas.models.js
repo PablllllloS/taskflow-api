@@ -16,29 +16,25 @@ module.exports = {
         const result = await pool.query('SELECT * FROM tarefas WHERE coluna = $1', [coluna] || 'afazer');
         return result.rows;
     },
-    adicionar: async ({ texto, prioridade, coluna, usuarioId }) => {
-        // const nova = {
-        //     id: proximoId++,
-        //     texto,
-        //     prioridade: prioridade || 'media',
-        //     coluna: coluna || 'afazer',
-        //     usuarioId
-        // };
-        // tarefas.push(nova);
+
+
+    adicionar: async ({ texto, prioridade, coluna, usuarioId, projetoId }) => {
         const result = await pool.query(
-            'INSERT INTO tarefas (texto, prioridade_id, coluna) VALUES ($1, $2, $3) RETURNING *',
-             [texto, prioridade, coluna])
+            'INSERT INTO tarefas (texto, prioridade_id, coluna, projeto_id, usuarios_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+             [texto, prioridade, coluna, projetoId, usuarioId])
         return result.rows[0];
     },
-    deletar: (id) => {
-        const idx = tarefas.findIndex(t => t.id === id);
-        if (idx === -1) return null;
-        return tarefas.splice(idx, 1)[0];
+    
+
+    deletar: async (id) => {
+        const result = await pool.query('DELETE FROM tarefas WHERE id = $1 RETURNING *', [id]);
+        return result.rows[0] || null;
     },
-    editar: ({ id, texto, prioridade, coluna }) => {
-        const idx = tarefas.findIndex(t => t.id === id);
-        if (idx === -1) return null;
-        tarefas[idx] = { ...tarefas[idx], texto, prioridade, coluna };
-        return tarefas[idx];
+    editar: async ({ id, texto, prioridade, coluna }) => {
+        const result = await pool.query(
+            'UPDATE tarefas SET texto = $1, prioridade_id = $2, coluna = $3 WHERE id = $4 RETURNING *',
+            [texto, prioridade, coluna, id]
+        );
+        return result.rows[0] || null;
     }
 };

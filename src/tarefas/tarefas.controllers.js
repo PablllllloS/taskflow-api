@@ -17,7 +17,7 @@ const tarefasController = {
     },
 
     async criar(req, res) {
-        const { texto, prioridade, coluna } = req.body;
+        const { texto, prioridade, projetoId, coluna } = req.body;
         const usuarioId = req.usuario ? req.usuario.id : null;
 
         if (coluna === 'andamento' && usuarioId) {
@@ -26,29 +26,28 @@ const tarefasController = {
             
             if (tarefasEmAndamento.length >= 2) {
                 return res.status(401).json({ 
-                    //ver sobre o 403
                     erro: 'Limite atingido. Só é permitido ter no máximo 2 tarefas em andamento.' 
                 });
             }
         }
 
-        const novaTarefa = tarefaModels.adicionar({ texto, prioridade, coluna, usuarioId });
+        const novaTarefa = await tarefaModels.adicionar({ texto, prioridade, coluna, usuarioId, projetoId });
         res.status(201).json(novaTarefa);
     },
 
-    editar(req, res) {
+    async editar(req, res) {
         const id = Number(req.params.id);
         const { texto, prioridade, coluna } = req.body;
         const usuarioId = req.usuario ? req.usuario.id : null;
 
-        const tarefaAtual = tarefaModels.buscar(id);
+        const tarefaAtual = await tarefaModels.buscar(id);
     
         if (!tarefaAtual) {
             return res.status(404).json({ erro: 'Tarefa não encontrada' });
         }
 
         if (coluna === 'andamento' && tarefaAtual.coluna !== 'andamento' && usuarioId) {
-            const todasTarefas = tarefaModels.listar();
+            const todasTarefas = await tarefaModels.listar();
             const tarefasEmAndamento = todasTarefas.filter(t => t.usuarioId === usuarioId && t.coluna === 'andamento');
             
             if (tarefasEmAndamento.length >= 2) {
@@ -59,7 +58,7 @@ const tarefasController = {
             }
         }
 
-        const tarefa = tarefaModels.editar({ id, texto, prioridade, coluna });
+        const tarefa = await tarefaModels.editar({ id, texto, prioridade, coluna });
         res.json(tarefa);
     },
 

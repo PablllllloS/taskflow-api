@@ -62,9 +62,9 @@ const tarefasController = {
         res.json(tarefa);
     },
 
-    deletar(req, res) {
+    async deletar(req, res) {
         const id = Number(req.params.id);
-        const tarefaDeletada = tarefaModels.deletar(id);
+        const tarefaDeletada = await tarefaModels.deletar(id);
 
         if (!tarefaDeletada) {
             return res.status(404).json({ erro: 'Tarefa não encontrada' });

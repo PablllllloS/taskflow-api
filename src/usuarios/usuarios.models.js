@@ -1,30 +1,34 @@
-let usuarios = [
-    { id: 1, nome: 'João', email: 'joao@gmail.com', senha: '123456', cargo: 'Dev' },
-    { id: 2, nome: 'Maria', email: 'maria@gmail.com', senha: '654321', cargo: 'Design' },
-    { id: 3, nome: 'admin', email: 'admin@gmail.com', senha: '1234', cargo: 'Admin' }
-];
-
-let proximoId = 4;
+const pool = require('../database/db');
 
 module.exports = {
-    listar: () => usuarios,
-    buscarPorId: (id) => usuarios.find(u => u.id === id),
-    buscarPorEmail: (email) => usuarios.find(usuario => usuario.email === email),
-    criar: ({ nome, email, senha, cargo }) => {
-        const novo = { id: proximoId++, nome, email, senha, cargo };
-        usuarios.push(novo);
-        return novo;
+    listar: async () => {
+        const result = await pool.query('SELECT * FROM usuarios');
+        return result.rows;
     },
-    editar: (id, dados) => {
-        const idx = usuarios.findIndex(u => u.id === id);
-        if (idx === -1) return null;
-        usuarios[idx] = { ...usuarios[idx], ...dados };
-        return usuarios[idx];
+    buscarPorId: async (id) => {
+        const result = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+        return result.rows[0] || null;
     },
-    deletar: (id) => {
-        const idx = usuarios.findIndex(u => u.id === id);
-        if (idx === -1) return false;
-        usuarios.splice(idx, 1);
-        return true;
+    buscarPorEmail: async (email) => {
+        const result = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+        return result.rows[0] || null;
+    },
+    criar: async ({ nome, email, senha, cargo }) => {
+        const result = await pool.query(
+            'INSERT INTO usuarios (nome, email, senha, cargo) VALUES ($1, $2, $3, $4) RETURNING *',
+            [nome, email, senha, cargo]
+        );
+        return result.rows[0];
+    },
+    editar: async (id, dados) => {
+        const result = await pool.query(
+            'UPDATE usuarios SET nome = $1, email = $2, senha = $3, cargo = $4 WHERE id = $5 RETURNING *',
+            [dados.nome, dados.email, dados.senha, dados.cargo, id]
+        );
+        return result.rows[0] || null;
+    },
+    deletar: async (id) => {
+        const result = await pool.query('DELETE FROM usuarios WHERE id = $1 RETURNING *', [id]);
+        return result.rows[0] || null;
     }
 };

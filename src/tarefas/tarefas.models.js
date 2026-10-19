@@ -31,9 +31,30 @@ module.exports = {
         return result.rows[0] || null;
     },
     editar: async ({ id, texto, prioridade, coluna }) => {
+        const iniciadoEm = null;
+        const concluidoEm = null;
+        if(coluna === 'andamento'){
+            iniciadoEm = new Date();
+            concluidoEm = null;
+        } else if (coluna ==='concluido'){
+            iniciadoEm = null;
+            concluidoEm = new Date();
+        } else {
+            iniciadoEm = null;
+            concluidoEm = null;
+        }
         const result = await pool.query(
-            'UPDATE tarefas SET texto = $1, prioridade_id = $2, coluna = $3 WHERE id = $4 RETURNING *',
-            [texto, prioridade, coluna, id]
+            `UPDATE tarefas SET 
+            texto = $1,
+            prioridade_id = $2, 
+            coluna = $3,
+            projeto_id = $4,
+            usuario_id = $5,
+            iniciado_em = $6,
+            conconluido_em = $7
+            WHERE id = $8 
+            RETURNING *`,
+            [texto, prioridade, coluna, projetoId, usuarioId, iniciadoEm, concluidoEm, id]
         );
         return result.rows[0] || null;
     }

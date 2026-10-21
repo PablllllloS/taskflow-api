@@ -11,7 +11,7 @@ const logger = require('./src/middleware/logger');
 const autenticar = require('./src/middleware/autenticar');
 const corsMiddleware = require('./src/middleware/cors');
 const validarContentType = require('./src/middleware/validarContentType');
-const tratarErro = require('./src/middleware/erro.middleware');
+const tratarErro = require('./src/middleware/tratarErros.middleware');
 
 const pool = require('./src/database/db');
 

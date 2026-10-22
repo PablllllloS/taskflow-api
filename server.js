@@ -12,6 +12,7 @@ const autenticar = require('./src/middleware/autenticar');
 const corsMiddleware = require('./src/middleware/cors');
 const validarContentType = require('./src/middleware/validarContentType');
 const tratarErro = require('./src/middleware/tratarErros.middleware');
+const criarErro = require('./utlis/criarErro');
 
 const pool = require('./src/database/db');
 
@@ -28,7 +29,7 @@ app.use('/usuarios', autenticar, usuarioRoutes);
 
 app.use((req, res) => {
     const rota = `${req.method} ${req.originalUrl}`;
-    res.status(404).json({error: `Rota não encontrada: ${rota}`})
+    throw criarErro(400, `Rota '${rota}' não encontrada`)
 });
 
 app.use(tratarErro);

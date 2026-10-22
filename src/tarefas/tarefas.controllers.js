@@ -1,4 +1,5 @@
 const tarefaModels = require('./tarefas.models');
+const {criarErro} = require('../../utlis/criarErro')
 
 const tarefasController = {
     async listar(req, res) {
@@ -11,7 +12,7 @@ const tarefasController = {
         const id = parseInt(req.params.id);
         const tarefa = await tarefaModels.buscar(id);
         if (!tarefa) {
-            return res.status(404).json({ erro: 'Tarefa não encontrada' });
+            throw criarErro(404, 'Tarefa não encontrada');
         }
         res.status(200).json(tarefa);
     },

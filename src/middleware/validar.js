@@ -1,10 +1,11 @@
 function validar(schema){
     return function(req, res, next){
         const erros = [];
+        const dados = req[origem || 'body'] || {};
 
         for (const campo in schema){
             const regras = schema[campo];
-            const valor = req.body[campo];
+            const valor = dados[campo];
             const ausente = valor === undefined || valor === null || valor === '';
 
             if(regras.obrigatorio && ausente){

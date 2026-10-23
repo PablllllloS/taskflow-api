@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model clientes {
+  id              Int       @id @default(autoincrement())
+  nome            String    @db.VarChar(100)
+  data_nascimento DateTime  @db.Date
+  pedidos         pedidos[]
+}
+
+model comentarios {
+  id         Int       @id @default(autoincrement())
+  tarefa_id  Int
+  usuario_id Int
+  texto      String?
+  criado_em  DateTime? @default(now()) @db.Timestamp(6)
+  tarefas    tarefas   @relation(fields: [tarefa_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comentarios_tarefas_fk")
+  usuarios   usuarios  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "comentarios_usuarios_fk")
+}
+
+model pedidos {
+  id           Int            @id @default(autoincrement())
+  idcliente    Int?
+  data         DateTime?      @default(now()) @db.Timestamp(6)
+  clientes     clientes?      @relation(fields: [idcliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pedidositens pedidositens[]
+}
+
+model pedidositens {
+  id         Int       @id @default(autoincrement())
+  idpedido   Int?
+  idproduto  Int?
+  valor      Decimal   @db.Decimal(18, 2)
+  desconto   Decimal   @db.Decimal(18, 2)
+  quantidade Decimal   @db.Decimal(18, 2)
+  pedidos    pedidos?  @relation(fields: [idpedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  produtos   produtos? @relation(fields: [idproduto], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model prioridades {
+  id        Int       @id @default(autoincrement())
+  descricao String    @db.VarChar(20)
+  criado_em DateTime? @default(now()) @db.Timestamp(6)
+  ativo     Boolean?  @default(true)
+  tarefas   tarefas[]
+}
+
+model produtos {
+  id               Int             @id @default(autoincrement())
+  idunidadesmedida Int?
+  descricao        String?         @db.VarChar(100)
+  pedidositens     pedidositens[]
+  unidadesmedida   unidadesmedida? @relation(fields: [idunidadesmedida], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model projetos {
+  id         Int       @id @default(autoincrement())
+  nome       String    @db.VarChar(100)
+  id_usuario Int
+  descricao  String?   @db.VarChar(100)
+  usuarios   usuarios  @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tarefas    tarefas[]
+}
+
+model tarefas {
+  id            Int           @id @default(autoincrement())
+  texto         String
+  ordem         Int           @default(0)
+  projeto_id    Int
+  usuarios_id   Int
+  criado_em     DateTime?     @default(now()) @db.Timestamp(6)
+  iniciado_em   DateTime?     @default(now()) @db.Timestamp(6)
+  terminado_em  DateTime?     @default(now()) @db.Timestamp(6)
+  coluna        String        @db.VarChar(15)
+  prioridade_id Int
+  tempo_em      DateTime?     @db.Timestamp(6)
+  comentarios   comentarios[]
+  prioridades   prioridades   @relation(fields: [prioridade_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tarefas_prioridades_fk")
+  projetos      projetos      @relation(fields: [projeto_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuarios      usuarios      @relation(fields: [usuarios_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model teste {
+  id         Int          @id @default(autoincrement())
+  nome       String       @db.VarChar(100)
+  descricao  String?      @db.VarChar(1000)
+  comida     String
+  testefilha testefilha[]
+}
+
+model teste_usuarios {
+  id   Int    @id @default(autoincrement())
+  nome String @db.VarChar(100)
+}
+
+model testefilha {
+  id         Int      @id @default(autoincrement())
+  id_teste   Int?
+  quantidade Decimal? @db.Decimal(10, 2)
+  teste      teste?   @relation(fields: [id_teste], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model unidadesmedida {
+  id        Int        @id @default(autoincrement())
+  sigla     String     @db.VarChar(3)
+  descricao String?    @db.VarChar(30)
+  produtos  produtos[]
+}
+
+model usuarios {
+  id          Int           @id @default(autoincrement())
+  nome        String        @db.VarChar(100)
+  email       String        @unique @db.VarChar(100)
+  senha_hash  String        @db.VarChar(100)
+  criado_em   DateTime?     @default(now()) @db.Timestamp(6)
+  comentarios comentarios[]
+  projetos    projetos[]
+  tarefas     tarefas[]
+}

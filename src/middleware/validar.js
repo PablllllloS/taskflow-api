@@ -1,5 +1,7 @@
-function validar(schema){
+const criarErro = require('../../utlis/criarErro');
+function validar(schema, origem){
     return function(req, res, next){
+        const dados = req[origem || 'body'] || [];
         const erros = [];
         const dados = req[origem || 'body'] || {};
 
@@ -12,9 +14,18 @@ function validar(schema){
                 erros.push(`O campo ${campo} é obrigatório.`);
                 continue;
             };
-            if (!ausente && regras.tipo && typeof valor !== regras.tipo){
+
+            if(ausente) continue;
+            
+            if(regras.tipo === 'inteiro'){
+                const numero = typeof valor === 'string' ? Number(valor) : valor;
+                if(!Number.isInteger(numero) || numero <= 0){
+                    erros.push(`O campo '${campo} deve ser um inteiro positivo.'`)
+                };
+            } else if (!ausente && regras.tipo && typeof valor !== regras.tipo){
                 erros.push(`o campo ${campo} deve ser do tipo ${regras.tipo}`);
             };
+
             if (regras.enum && !regras.enum.includes(valor)){
                 erros.push(`o campo ${campo} deve ser um de: ${regras.enum.join(', ')}`);
             };
@@ -32,7 +43,7 @@ function validar(schema){
         };
 
         if(erros.length > 0){
-            return res.status(400).json({ erros});
+            throw criarErro(400, 'Dados inválidos', erros);
         };
         next();
     };

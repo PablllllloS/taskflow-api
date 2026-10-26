@@ -3,7 +3,6 @@ function validar(schema, origem){
     return function(req, res, next){
         const dados = req[origem || 'body'] || [];
         const erros = [];
-        const dados = req[origem || 'body'] || {};
 
         for (const campo in schema){
             const regras = schema[campo];

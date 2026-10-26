@@ -1,12 +1,42 @@
 // let tarefas = [];
 // let proximoId = 3;
-
+const prisma = require('../database/prisma');
 const pool = require('../database/db');
+
+const incluirNomes = {
+    projetos: {select: {nome:true}},
+    usuarios: {select: {nome: true}}
+};
+
+function formatarTarefa(tarefa){
+    const {projetos, usuarios, ...resto} = tarefa;
+    return {
+        ...resto,
+        projetos: projetos?.nome,
+        usuarios: usuarios?.nome
+    }
+}
+
 
 module.exports = {
     listar: async () => {
-        const result = await pool.query('SELECT * FROM tarefas ORDER by id');
-        return result.rows;
+        const lista = await prisma.tarefas.findMany({
+            select:{
+                id: true,
+                texto: true,
+                ordem: true,
+                coluna: true,
+                projeto_id: true,
+                usuarios_id: true,
+                prioridade_id: true,
+                tempo_em: true,
+                criado_em: true,
+                iniciado_em: true,
+                ...incluirNomes,
+            },
+            orderBy: {id:'asc'}
+        })
+        return lista.map(formatarTarefa);
     },
     buscar: async (id) =>{
         const result = await pool.query('SELECT * from tarefas where id = $1',[id])

@@ -1,6 +1,6 @@
 const express = require('express');
-// const validar = require('../middleware/validar');
-// const schemas = require('../middleware/schemas');
+const validar = require('../middleware/validar');
+const schemas = require('../middleware/schemas');
 const router = express.Router();
 const idValido = validar(schemas.id, "params");
 const tarefasController = require('./tarefas.controllers');

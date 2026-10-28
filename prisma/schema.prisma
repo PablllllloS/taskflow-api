@@ -49,6 +49,7 @@ model prioridades {
   descricao String    @db.VarChar(20)
   criado_em DateTime? @default(now()) @db.Timestamp(6)
   ativo     Boolean?  @default(true)
+  cor       String    @default("#94A388") @db.VarChar(7)
   tarefas   tarefas[]
 }
 

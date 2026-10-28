@@ -15,31 +15,18 @@ function formatarTarefa(tarefa){
         ...resto,
         projetos: projetos?.nome,
         usuarios: usuarios?.nome,
-        prioridade: prioridades?.descricao,
-        prioridade: prioridades?.cor
+        prioridades: prioridades?.descricao,
+        prioridades: prioridades?.cor
     }
 }
 
 
 const tarefas = {
     listar: async () => {
-        const lista = await prisma.tarefas.findMany({
-            select:{
-                id: true,
-                texto: true,
-                ordem: true,
-                coluna: true,
-                projeto_id: true,
-                usuarios_id: true,
-                prioridade_id: true,
-                tempo_em: true,
-                criado_em: true,
-                iniciado_em: true,
-                ...incluirNomes,
-            },
-            orderBy: {id:'asc'}
-        })
-        return lista.map(formatarTarefa);
+        return prisma.tarefas.findMany({
+            include:incluirNomes,
+            orderBy:{id: 'asc'}
+        });
     },
     buscar: async (id) =>{
         // const result = await pool.query('SELECT * from tarefas where id = $1',[id])
@@ -78,8 +65,17 @@ const tarefas = {
     
 
     deletar: async (id) => {
-        const result = await pool.query('DELETE FROM tarefas WHERE id = $1 RETURNING *', [id]);
-        return result.rows[0] || null;
+        // const result = await pool.query('DELETE FROM tarefas WHERE id = $1 RETURNING *', [id]);
+        // return result.rows[0] || null;
+        try{
+            const tarefa = await prisma.tarefas.delete({
+                where: {id}
+            });
+            return formatarTarefa(tarefa);
+        } catch (erro){
+            if(erro.code === 'P2025') return null;
+            throw erro;
+        }
     },
     editar: async ({ id, dados }) => {
         const iniciadoEm = null;

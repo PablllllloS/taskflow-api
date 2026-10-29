@@ -8,6 +8,8 @@ const tarefasRoutes = require('./src/tarefas/tarefas.routes');
 const usuarioRoutes = require('./src/usuarios/usuarios.routes');
 
 const logger = require('./src/middleware/logger');
+const swaggerUi = require('swagger-ui-express');
+const openapi = require('./src/dosc/openapi');
 const autenticar = require('./src/middleware/autenticar');
 const corsMiddleware = require('./src/middleware/cors');
 const validarContentType = require('./src/middleware/validarContentType');
@@ -26,6 +28,7 @@ app.use('/auth', authRoutes);
 app.use('/tarefas', autenticar, tarefasRoutes);
 app.use('/usuarios', autenticar, usuarioRoutes);
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapi))
 
 app.use((req, res) => {
     const rota = `${req.method} ${req.originalUrl}`;

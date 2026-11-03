@@ -9,9 +9,9 @@ const tarefasController = {
     },
 
     async buscarPorId(req, res) {
-        const id = parseInt(req.params.id);
+        const id = Number(req.params.id);
         const tarefa = await tarefaModels.buscar(id);
-        if (!tarefa) {
+        if (!Number.isInteger(id) || id <= 0) {
             throw criarErro(404, 'Tarefa não encontrada');
         }
         res.status(200).json(tarefa);
@@ -23,7 +23,7 @@ const tarefasController = {
 
         if (coluna === 'andamento' && usuarioId) {
             const todasTarefas = await tarefaModels.listar();
-            const tarefasEmAndamento = todasTarefas.filter(t => t.usuarioId === usuarioId && t.coluna === 'andamento');
+            const tarefasEmAndamento = todasTarefas.filter(t => t.usuarios_id === usuarioId && t.coluna === 'andamento');
             
             if (tarefasEmAndamento.length >= 2) {
                 return res.status(401).json({ 
@@ -32,7 +32,13 @@ const tarefasController = {
             }
         }
 
-        const novaTarefa = await tarefaModels.adicionar({ texto, prioridade, coluna, usuarioId, projetoId });
+        const novaTarefa = await tarefaModels.adicionar({ 
+            texto,
+            coluna,
+            prioridade_id: prioridade,
+            usuarios_id: usuarioId,
+            projeto_id: projetoId
+        });
         res.status(201).json(novaTarefa);
     },
 
@@ -59,7 +65,15 @@ const tarefasController = {
             }
         }
 
-        const tarefa = await tarefaModels.editar({ id, texto, prioridade, coluna });
+        const tarefa = await tarefaModels.editar({
+            id,
+            dados: {
+                texto,
+                coluna,
+                prioridade_id: prioridade,
+                ordem: ordem
+            }
+        });
         res.json(tarefa);
     },
 

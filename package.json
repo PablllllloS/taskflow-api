@@ -5,13 +5,14 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js"
   },
   "author": "Pablo",
   "license": "ISC",
   "keywords": [],
   "devDependencies": {
+    "jest": "^30.5.2",
     "nodemon": "^1.14.10",
     "prisma": "^6.19.3"
   },

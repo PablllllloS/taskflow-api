@@ -1,7 +1,7 @@
 // let tarefas = [];
 // let proximoId = 3;
+const formatarTarefa = require('../../utlis/formatarTarefa')
 const prisma = require('../database/prisma');
-const pool = require('../database/db');
 
 const incluirNomes = {
     projetos: {select: {nome:true}},
@@ -9,16 +9,16 @@ const incluirNomes = {
     prioridades: {select: {descricao: true, cor: true}}
 };
 
-function formatarTarefa(tarefa){
-    const {projetos, usuarios, prioridades, ...resto} = tarefa;
-    return {
-        ...resto,
-        projetos: projetos?.nome,
-        usuarios: usuarios?.nome,
-        prioridades: prioridades?.descricao,
-        cor_prioridades: prioridades?.cor
-    }
-}
+// function formatarTarefa(tarefa){
+//     const {projetos, usuarios, prioridades, ...resto} = tarefa;
+//     return {
+//         ...resto,
+//         projetos: projetos?.nome,
+//         usuarios: usuarios?.nome,
+//         prioridades: prioridades?.descricao,
+//         cor_prioridades: prioridades?.cor
+//     }
+// }
 
 
 const tarefas = {

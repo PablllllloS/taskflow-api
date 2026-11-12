@@ -5,10 +5,10 @@ const schemas = {
     tarefa : {
         texto: { obrigatorio: true, tipo: 'string'},
         prioridade: { obrigatorio: false, tipo: 'number', enum: [1,2,3]},
-        coluna: { obrigatorio: false, tipo: 'string', enum: ['afazer', 'andamento', 'concluido']},
-        usuarioId: {obrigatorio: false, tipo: 'inteiro'},
+        coluna: { obrigatorio: true, tipo: 'string', enum: ['afazer', 'andamento', 'concluido']},
+        usuarioId: {obrigatorio: true, tipo: 'inteiro'},
         projetoId: {obrigatorio: true, tipo: 'inteiro'},
-        idprioridade: {obrigatorio: false, tipo: 'inteiro'},
+        idprioridade: {obrigatorio: true, tipo: 'inteiro'},
     },
     usuario: {
         nome: { obrigatorio: true, tipo: 'string', minLength: 3},

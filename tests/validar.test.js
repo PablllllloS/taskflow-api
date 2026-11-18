@@ -8,20 +8,16 @@ function tarefaValida(){
         usuario_id: 1,
         projeto_id:1,
         prioridade_id:2
-    }
-}
+    };
+};
 
 function pegarErro(funcao){
     try{
-        
         funcao();
-    
     } catch(erro){
-
         return erro;
-
-    }
-}
+    };
+};
 
 describe('validar', ()=>{
     test('chama o next quando os dados estão certos', ()=>{
@@ -33,7 +29,7 @@ describe('validar', ()=>{
         
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith();
-    })
+    });
 
     test('sem body: 400 com um detalhe por campo obrigatório', ()=>{
         const middleware = validar(schemas.tarefa);
@@ -77,7 +73,7 @@ describe('validar', ()=>{
         "O campo 'id' deve ser inteiro positivo",
         ]);
         expect(nextRuim).not.toHaveBeenCalled();
-    })
+    });
 
     test('campo opcional não enviado não gera erro', () => {
         const middleware = validar(schemas.projeto);

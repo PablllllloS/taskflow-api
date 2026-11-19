@@ -16,7 +16,7 @@ jobs:
       DIRECT_URL:  ${{secrets.DIRECT_URL}}
       JWT_SECRET:  ${{secrets.JWT_SECRET}}
       AMBIENTE:  teste
-
+,
     steps:
       -  name:  baixar o código
          uses:  action/checkout@v6

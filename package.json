@@ -8,6 +8,10 @@
     "test": "jest",
     "start": "node server.js"
   },
+  "jest": {
+    "setupFiles": ["<rootDir>/tests/setup-env.js"]
+  },
+  "test": "jest --runInBand",
   "author": "Pablo",
   "license": "ISC",
   "keywords": [],
